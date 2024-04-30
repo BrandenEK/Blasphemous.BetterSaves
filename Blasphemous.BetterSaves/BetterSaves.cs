@@ -12,6 +12,8 @@ public class BetterSaves : BlasMod
 
     private int _currentMultiplier = 0;
 
+    public int CurrentScreen { get; set; } = 0;
+
     public int GetRealSlot(int slot)
     {
         return slot + 3 * _currentMultiplier;
@@ -25,21 +27,26 @@ public class BetterSaves : BlasMod
 
     protected override void OnUpdate()
     {
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            LogError("Current save slot: " + PersistentManager.GetAutomaticSlot());
+        }
+
         if (!SlotsWidget.IsShowing)
             return;
 
-        if (_currentMultiplier > 0 && InputHandler.GetButtonDown(ButtonCode.InventoryLeft))
-        {
-            LogWarning("Moving left");
-            _currentMultiplier--;
-            RefreshSlots();
-        }
-        if (_currentMultiplier < MAX_MULTIPLIER && InputHandler.GetButtonDown(ButtonCode.InventoryRight))
-        {
-            LogWarning("Moving right");
-            _currentMultiplier++;
-            RefreshSlots();
-        }
+        //if (_currentMultiplier > 0 && InputHandler.GetButtonDown(ButtonCode.InventoryLeft))
+        //{
+        //    LogWarning("Moving left");
+        //    _currentMultiplier--;
+        //    RefreshSlots();
+        //}
+        //if (_currentMultiplier < MAX_MULTIPLIER && InputHandler.GetButtonDown(ButtonCode.InventoryRight))
+        //{
+        //    LogWarning("Moving right");
+        //    _currentMultiplier++;
+        //    RefreshSlots();
+        //}
     }
 
     private void RefreshSlots()
