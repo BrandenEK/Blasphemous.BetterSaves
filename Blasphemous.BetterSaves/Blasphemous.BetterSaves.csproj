@@ -8,7 +8,7 @@
     <Product>Better Saves</Product>
     <Authors>Damocles</Authors>
     <Company>Damocles</Company>
-    <Description>A mod for Blasphemous 1</Description>
+    <Description>Allows naming save files and creating a lot more of them</Description>
     <Version>0.1.0</Version>
 
     <TargetName>BetterSaves</TargetName>

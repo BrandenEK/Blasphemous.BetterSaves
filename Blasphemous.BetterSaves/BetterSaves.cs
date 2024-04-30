@@ -1,4 +1,6 @@
 ﻿using Blasphemous.ModdingAPI;
+using Framework.Managers;
+using System;
 
 namespace Blasphemous.BetterSaves;
 
@@ -9,5 +11,16 @@ public class BetterSaves : BlasMod
     protected override void OnInitialize()
     {
         LogError($"{ModInfo.MOD_NAME} has been initialized");
+    }
+
+    protected override void OnNewGame()
+    {
+        string name = DateTime.Now.ToString();
+        SetSaveName(name);
+    }
+
+    public void SetSaveName(string name)
+    {
+        Core.Events.SetFlag("NAME_" + name, true, true);
     }
 }
