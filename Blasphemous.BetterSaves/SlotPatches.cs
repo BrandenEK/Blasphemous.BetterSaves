@@ -180,29 +180,9 @@ class Slot_Clear_Patch
             nav3.selectOnUp = button2;
             button3.navigation = nav3;
 
-            button1.onSelected.RemoveAllListeners();
-            button2.onSelected.RemoveAllListeners();
-            button3.onSelected.RemoveAllListeners();
-
-            button1.onSelected = new EventsButton.ButtonSelectedEvent();
-            button2.onSelected = new EventsButton.ButtonSelectedEvent();
-            button3.onSelected = new EventsButton.ButtonSelectedEvent();
-
-            button1.onSelected.AddListener(() => selector.OnSelectedSlots(3));
-            button2.onSelected.AddListener(() => selector.OnSelectedSlots(4));
-            button3.onSelected.AddListener(() => selector.OnSelectedSlots(5));
-
-            button1.onClick.RemoveAllListeners();
-            button2.onClick.RemoveAllListeners();
-            button3.onClick.RemoveAllListeners();
-
-            button1.onClick = new EventsButton.ButtonClickedEvent();
-            button2.onClick = new EventsButton.ButtonClickedEvent();
-            button3.onClick = new EventsButton.ButtonClickedEvent();
-
-            button1.onClick.AddListener(() => selector.OnAcceptSlots(i * 3 + 0));
-            button2.onClick.AddListener(() => selector.OnAcceptSlots(i * 3 + 1));
-            button3.onClick.AddListener(() => selector.OnAcceptSlots(i * 3 + 2));
+            AddEvents(button1, i * 3 + 3, selector);
+            AddEvents(button2, i * 3 + 4, selector);
+            AddEvents(button3, i * 3 + 5, selector);
 
             slots.Add(slot1.GetComponent<SaveSlot>());
             slots.Add(slot2.GetComponent<SaveSlot>());
@@ -213,7 +193,28 @@ class Slot_Clear_Patch
             t2.FocusObjects.Add(slot3);
         }
 
+        for (int i = 3; i < 12; i++)
+        {
+            UpdateSlot(selector, slots, i);
+        }
+
         Main.BetterSaves.LogError("Added more save slots");
+    }
+
+    private static void AddEvents(EventsButton button, int idx, SelectSaveSlots selector)
+    {
+        //button.onSelected.RemoveAllListeners();
+        button.onSelected = new EventsButton.ButtonSelectedEvent();
+        button.onSelected.AddListener(() => selector.OnSelectedSlots(idx));
+
+        //button.onClick.RemoveAllListeners();
+        button.onClick = new EventsButton.ButtonClickedEvent();
+        button.onClick.AddListener(() => selector.OnAcceptSlots(idx));
+    }
+
+    private static void UpdateSlot(SelectSaveSlots selector, List<SaveSlot> slots, int index)
+    {
+
     }
 }
 
