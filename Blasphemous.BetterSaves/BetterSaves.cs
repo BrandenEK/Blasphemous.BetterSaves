@@ -3,6 +3,7 @@ using Blasphemous.ModdingAPI.Input;
 using Framework.Managers;
 using Gameplay.UI.Others.MenuLogic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Blasphemous.BetterSaves;
 
@@ -30,6 +31,8 @@ public class BetterSaves : BlasMod
         if (Input.GetKeyDown(KeyCode.P))
         {
             LogError("Current save slot: " + PersistentManager.GetAutomaticSlot());
+            LogError("Current selected slot: " + SlotsWidget.SelectedSlot);
+            LogError("Current selected object: " + EventSystem.current.currentSelectedGameObject?.name);
         }
 
         if (!SlotsWidget.IsShowing)

@@ -1,11 +1,14 @@
 ﻿using Blasphemous.ModdingAPI.Input;
 using Framework.Managers;
+using Gameplay.UI.Others;
 using Gameplay.UI.Others.Buttons;
 using Gameplay.UI.Others.MenuLogic;
 using Gameplay.UI.Widgets;
 using HarmonyLib;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace Blasphemous.BetterSaves;
 
@@ -74,20 +77,22 @@ class t
 
         if (Main.BetterSaves.CurrentScreen > 0 && Main.BetterSaves.InputHandler.GetButtonDown(ButtonCode.InventoryLeft))
         {
-            Main.BetterSaves.LogWarning("Moving left");
+            Main.BetterSaves.LogWarning("Moving left to " + (__instance.SelectedSlot - 3));
             Main.BetterSaves.CurrentScreen--;
 
             RefreshSlots(___slots);
 
-            __instance.OnSelectedSlots(__instance.SelectedSlot - 3);
+            //__instance.OnSelectedSlots(__instance.SelectedSlot - 3);
+            //EventSystem.current.SetSelectedGameObject(___slots[__instance.SelectedSlot - 3].gameObject, null);
         }
         if (Main.BetterSaves.CurrentScreen < 3 && Main.BetterSaves.InputHandler.GetButtonDown(ButtonCode.InventoryRight))
         {
-            Main.BetterSaves.LogWarning("Moving right");
+            Main.BetterSaves.LogWarning("Moving right to " + (__instance.SelectedSlot + 3));
             Main.BetterSaves.CurrentScreen++;
 
             RefreshSlots(___slots);
-            __instance.OnSelectedSlots(__instance.SelectedSlot + 3);
+            //__instance.OnSelectedSlots(__instance.SelectedSlot + 3);
+            //EventSystem.current.SetSelectedGameObject(___slots[__instance.SelectedSlot + 3].gameObject, null);
         }
 
 
@@ -133,21 +138,91 @@ class Slot_Clear_Patch
 {
     public static void Prefix(SelectSaveSlots __instance, List<SaveSlot> ___slots)
     {
+        var focuses = Object.FindObjectsOfType<KeepFocus>();
+        foreach (KeepFocus keepFocus in focuses)
+        {
+            Main.BetterSaves.LogWarning(keepFocus.name);
+            Main.BetterSaves.LogError(keepFocus.transform.parent?.name);
+        }
+
         // Create extra slots if they dont already exist
         if (___slots.Count <= 3)
-            AddSlots(___slots);
+            AddSlots(__instance, ___slots);
     }
 
-    private static void AddSlots(List<SaveSlot> slots)
+    private static void AddSlots(SelectSaveSlots selector, List<SaveSlot> slots)
     {
         // Make more copies of the buttons
         for (int i = 0; i < 3; i++)
         {
-            slots.Add(Object.Instantiate(slots[0].gameObject, slots[0].transform.parent).GetComponent<SaveSlot>());
-            slots.Add(Object.Instantiate(slots[1].gameObject, slots[1].transform.parent).GetComponent<SaveSlot>());
-            slots.Add(Object.Instantiate(slots[2].gameObject, slots[2].transform.parent).GetComponent<SaveSlot>());
+            GameObject slot1 = Object.Instantiate(slots[0].gameObject, slots[0].transform.parent);
+            GameObject slot2 = Object.Instantiate(slots[1].gameObject, slots[1].transform.parent);
+            GameObject slot3 = Object.Instantiate(slots[2].gameObject, slots[2].transform.parent);
+
+            slot1.name = $"slot{i * 3 + 3}";
+            slot2.name = $"slot{i * 3 + 4}";
+            slot3.name = $"slot{i * 3 + 5}";
+
+            EventsButton button1 = slot1.GetComponent<EventsButton>();
+            EventsButton button2 = slot2.GetComponent<EventsButton>();
+            EventsButton button3 = slot3.GetComponent<EventsButton>();
+
+            Navigation nav1 = button1.navigation;
+            nav1.selectOnDown = button2;
+            button1.navigation = nav1;
+
+            Navigation nav2 = button2.navigation;
+            nav2.selectOnUp = button1;
+            nav2.selectOnDown = button3;
+            button2.navigation = nav2;
+
+            Navigation nav3 = button3.navigation;
+            nav3.selectOnUp = button2;
+            button3.navigation = nav3;
+
+            button1.onSelected.RemoveAllListeners();
+            button2.onSelected.RemoveAllListeners();
+            button3.onSelected.RemoveAllListeners();
+
+            button1.onSelected.AddListener(() => selector.OnSelectedSlots(3));
+            button2.onSelected.AddListener(() => selector.OnSelectedSlots(4));
+            button3.onSelected.AddListener(() => selector.OnSelectedSlots(5));
+
+            button1.onClick.RemoveAllListeners();
+            button2.onClick.RemoveAllListeners();
+            button3.onClick.RemoveAllListeners();
+
+            button1.onClick.AddListener(() => selector.OnAcceptSlots(i * 3 + 0));
+            button2.onClick.AddListener(() => selector.OnAcceptSlots(i * 3 + 1));
+            button3.onClick.AddListener(() => selector.OnAcceptSlots(i * 3 + 2));
+
+            slots.Add(slot1.GetComponent<SaveSlot>());
+            slots.Add(slot2.GetComponent<SaveSlot>());
+            slots.Add(slot3.GetComponent<SaveSlot>());
+
+            t2.FocusObjects.Add(slot1);
+            t2.FocusObjects.Add(slot2);
+            t2.FocusObjects.Add(slot3);
         }
 
         Main.BetterSaves.LogError("Added more save slots");
     }
+}
+
+[HarmonyPatch(typeof(KeepFocus), "Awake")]
+class t2
+{
+    public static void Prefix(KeepFocus __instance, List<GameObject> ___allowedObjects)
+    {
+        if (__instance.name == "UI_SLOT")
+        {
+            foreach (var obj in ___allowedObjects)
+            {
+                Main.BetterSaves.Log(obj.name);
+            }
+            FocusObjects = ___allowedObjects;
+        }
+    }
+
+    public static List<GameObject> FocusObjects { get; private set; }
 }
