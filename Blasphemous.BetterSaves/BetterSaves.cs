@@ -17,11 +17,6 @@ public class BetterSaves : BlasMod
         return slot + 3 * _currentMultiplier;
     }
 
-    protected override void OnInitialize()
-    {
-        LogError($"{ModInfo.MOD_NAME} has been initialized");
-    }
-
     protected override void OnNewGame()
     {
         string name = System.DateTime.Now.ToString();
@@ -33,13 +28,13 @@ public class BetterSaves : BlasMod
         if (!SlotsWidget.IsShowing)
             return;
 
-        if (InputHandler.GetButtonDown(ButtonCode.InventoryLeft))
+        if (_currentMultiplier > 0 && InputHandler.GetButtonDown(ButtonCode.InventoryLeft))
         {
             LogWarning("Moving left");
             _currentMultiplier--;
             RefreshSlots();
         }
-        else if (InputHandler.GetButtonDown(ButtonCode.InventoryRight))
+        if (_currentMultiplier < MAX_MULTIPLIER && InputHandler.GetButtonDown(ButtonCode.InventoryRight))
         {
             LogWarning("Moving right");
             _currentMultiplier++;
@@ -82,4 +77,6 @@ public class BetterSaves : BlasMod
             return x_slotsWidget;
         }
     }
+
+    private const int MAX_MULTIPLIER = 3;
 }
