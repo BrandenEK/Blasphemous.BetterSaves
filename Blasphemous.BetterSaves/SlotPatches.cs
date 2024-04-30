@@ -83,7 +83,7 @@ class t
             RefreshSlots(___slots);
 
             //__instance.OnSelectedSlots(__instance.SelectedSlot - 3);
-            //EventSystem.current.SetSelectedGameObject(___slots[__instance.SelectedSlot - 3].gameObject, null);
+            EventSystem.current.SetSelectedGameObject(___slots[__instance.SelectedSlot - 3].gameObject, null);
         }
         if (Main.BetterSaves.CurrentScreen < 3 && Main.BetterSaves.InputHandler.GetButtonDown(ButtonCode.InventoryRight))
         {
@@ -92,7 +92,7 @@ class t
 
             RefreshSlots(___slots);
             //__instance.OnSelectedSlots(__instance.SelectedSlot + 3);
-            //EventSystem.current.SetSelectedGameObject(___slots[__instance.SelectedSlot + 3].gameObject, null);
+            EventSystem.current.SetSelectedGameObject(___slots[__instance.SelectedSlot + 3].gameObject, null);
         }
 
 
@@ -184,6 +184,10 @@ class Slot_Clear_Patch
             button2.onSelected.RemoveAllListeners();
             button3.onSelected.RemoveAllListeners();
 
+            button1.onSelected = new EventsButton.ButtonSelectedEvent();
+            button2.onSelected = new EventsButton.ButtonSelectedEvent();
+            button3.onSelected = new EventsButton.ButtonSelectedEvent();
+
             button1.onSelected.AddListener(() => selector.OnSelectedSlots(3));
             button2.onSelected.AddListener(() => selector.OnSelectedSlots(4));
             button3.onSelected.AddListener(() => selector.OnSelectedSlots(5));
@@ -191,6 +195,10 @@ class Slot_Clear_Patch
             button1.onClick.RemoveAllListeners();
             button2.onClick.RemoveAllListeners();
             button3.onClick.RemoveAllListeners();
+
+            button1.onClick = new EventsButton.ButtonClickedEvent();
+            button2.onClick = new EventsButton.ButtonClickedEvent();
+            button3.onClick = new EventsButton.ButtonClickedEvent();
 
             button1.onClick.AddListener(() => selector.OnAcceptSlots(i * 3 + 0));
             button2.onClick.AddListener(() => selector.OnAcceptSlots(i * 3 + 1));
