@@ -1,6 +1,7 @@
 ﻿using Blasphemous.ModdingAPI;
+using Blasphemous.ModdingAPI.Input;
 using Framework.Managers;
-using System;
+using Gameplay.UI.Others.MenuLogic;
 using UnityEngine;
 
 namespace Blasphemous.BetterSaves;
@@ -23,20 +24,62 @@ public class BetterSaves : BlasMod
 
     protected override void OnNewGame()
     {
-        string name = DateTime.Now.ToString();
+        string name = System.DateTime.Now.ToString();
         SetSaveName(name);
     }
 
-    protected override void OnLateUpdate()
+    protected override void OnUpdate()
     {
-        if (Input.GetKeyDown(KeyCode.Keypad9))
-            _currentMultiplier++;
-        if (Input.GetKeyDown(KeyCode.Keypad8))
+        if (!SlotsWidget.IsShowing)
+            return;
+
+        if (InputHandler.GetButtonDown(ButtonCode.InventoryLeft))
+        {
+            LogWarning("Moving left");
             _currentMultiplier--;
+            RefreshSlots();
+        }
+        else if (InputHandler.GetButtonDown(ButtonCode.InventoryRight))
+        {
+            LogWarning("Moving right");
+            _currentMultiplier++;
+            RefreshSlots();
+        }
+    }
+
+    private void RefreshSlots()
+    {
+        int currentSlot = SlotsWidget.SelectedSlot;
+
+        SlotsWidget.Clear();
+        SlotsWidget.SetAllData(MainMenu, SelectSaveSlots.SlotsModes.Normal);
+        SlotsWidget.OnSelectedSlots(currentSlot);
     }
 
     public void SetSaveName(string name)
     {
         Core.Events.SetFlag("NAME_" + name, true, true);
+    }
+
+    private NewMainMenu x_mainMenu = null;
+    private NewMainMenu MainMenu
+    {
+        get
+        {
+            if (x_mainMenu == null)
+                x_mainMenu = Object.FindObjectOfType<NewMainMenu>();
+            return x_mainMenu;
+        }
+    }
+
+    private SelectSaveSlots x_slotsWidget = null;
+    private SelectSaveSlots SlotsWidget
+    {
+        get
+        {
+            if (x_slotsWidget == null)
+                x_slotsWidget = Object.FindObjectOfType<SelectSaveSlots>();
+            return x_slotsWidget;
+        }
     }
 }
