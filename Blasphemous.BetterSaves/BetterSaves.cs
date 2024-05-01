@@ -4,13 +4,19 @@ using Blasphemous.ModdingAPI;
 
 namespace Blasphemous.BetterSaves;
 
+/// <summary>
+/// Increases available save slots and allows naming them
+/// </summary>
 public class BetterSaves : BlasMod
 {
-    public BetterSaves() : base(ModInfo.MOD_ID, ModInfo.MOD_NAME, ModInfo.MOD_AUTHOR, ModInfo.MOD_VERSION) { }
+    internal BetterSaves() : base(ModInfo.MOD_ID, ModInfo.MOD_NAME, ModInfo.MOD_AUTHOR, ModInfo.MOD_VERSION) { }
 
     public NameHandler NameHandler { get; private set; }
     public SlotHandler SlotHandler { get; private set; }
 
+    /// <summary>
+    /// Loads config and creates handlers
+    /// </summary>
     protected override void OnInitialize()
     {
         Config cfg = ConfigHandler.Load<Config>();
@@ -19,12 +25,9 @@ public class BetterSaves : BlasMod
         SlotHandler = new SlotHandler(System.Math.Max(cfg.totalSlots, 3) / 3 - 1);
     }
 
-    protected override void OnNewGame()
-    {
-        string name = System.DateTime.Now.ToString();
-        NameHandler.SetSaveName(name);
-    }
-
+    /// <summary>
+    /// Update handlers
+    /// </summary>
     protected override void OnUpdate()
     {
         SlotHandler.UpdateSlots();

@@ -9,6 +9,9 @@ using UnityEngine.UI;
 
 namespace Blasphemous.BetterSaves.Slots;
 
+/// <summary>
+/// Handles adding more slots to the main menu
+/// </summary>
 public class SlotHandler(int maxScreens)
 {
     private readonly int _maxScreens = maxScreens;
@@ -17,8 +20,8 @@ public class SlotHandler(int maxScreens)
     private List<SaveSlot> _slotList;
     private List<GameObject> _focusList;
 
-    public void StoreSlotList(List<SaveSlot> slotList) => _slotList = slotList;
-    public void StoreFocusList(List<GameObject> focusList) => _focusList = focusList;
+    internal void StoreSlotList(List<SaveSlot> slotList) => _slotList = slotList;
+    internal void StoreFocusList(List<GameObject> focusList) => _focusList = focusList;
 
     /// <summary>
     /// Check for shoulder button input and change screen
