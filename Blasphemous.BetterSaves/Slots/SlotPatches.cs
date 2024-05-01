@@ -9,7 +9,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace Blasphemous.BetterSaves;
+namespace Blasphemous.BetterSaves.Slots;
 
 [HarmonyPatch(typeof(SelectSaveSlots), nameof(SelectSaveSlots.OnSelectedSlots))]
 class Slot_Select_Patch
