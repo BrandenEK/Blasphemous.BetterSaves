@@ -20,14 +20,14 @@ class SelectSaveSlotsData_Patch
             if (slotData == null)
                 continue;
 
-            string nameFlag = slotData.flags.flagsPreserve.Keys.FirstOrDefault(f => f.StartsWith("NAME_"));
+            string slotName = slotData.flags.flagsPreserve.Keys.FirstOrDefault(f => f.StartsWith("NAME_"))?.Substring(5);
 
-            if (nameFlag == null)
+            if (string.IsNullOrEmpty(slotName))
                 continue;
 
             // Send extra info to the slot
-            Main.BetterSaves.Log($"Displaying name for slot {i}: {nameFlag.Substring(5)}");
-            ___slots[i].SetData("ignore", nameFlag.Substring(5), 0, false, false, false, 0, SelectSaveSlots.SlotsModes.Normal);
+            Main.BetterSaves.Log($"Displaying name for slot {i}: {slotName}");
+            ___slots[i].SetData("ignore", slotName, 0, false, false, false, 0, SelectSaveSlots.SlotsModes.Normal);
         }
     }
 }

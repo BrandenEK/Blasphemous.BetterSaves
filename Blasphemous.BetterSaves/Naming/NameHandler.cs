@@ -10,8 +10,13 @@ public class NameHandler
     /// <summary>
     /// Set the name of the current save file
     /// </summary>
-    public void SetSaveName(string name)
+    public bool TrySetSaveName(string name)
     {
+        if (Core.Events.GetFlag("NAMED"))
+            return false;
+
+        Core.Events.SetFlag("NAMED", true, true);
         Core.Events.SetFlag("NAME_" + name, true, true);
+        return true;
     }
 }
