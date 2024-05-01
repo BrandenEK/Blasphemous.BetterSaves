@@ -1,5 +1,4 @@
 ﻿using Blasphemous.ModdingAPI.Input;
-using Framework.Managers;
 using Gameplay.UI.Others;
 using Gameplay.UI.Others.Buttons;
 using Gameplay.UI.Others.MenuLogic;
@@ -44,24 +43,9 @@ class Slot_Clear_Patchxxxxxxxxxxxxxx
 {
     public static void Postfix(SelectSaveSlots __instance, List<SaveSlot> ___slots)
     {
-        Main.BetterSaves.LogError($"Setting all data");
-        // temp
-
         t.RefreshSlots(___slots);
     }
 }
-
-//[HarmonyPatch(typeof(PersistentManager), nameof(PersistentManager.GetSlotData))]
-//class PM_GetSlotData_Patch
-//{
-//    public static void Prefix(ref int slot) => slot = Main.BetterSaves.GetRealSlot(slot);
-//}
-
-//[HarmonyPatch(typeof(SaveSlot), nameof(SaveSlot.SetNumber))]
-//class SaveSlot_Number_Patch
-//{
-//    public static void Prefix(ref int slot) => slot = Main.BetterSaves.GetRealSlot(slot);
-//}
 
 [HarmonyPatch(typeof(SelectSaveSlots), "Update")]
 class t
@@ -81,8 +65,6 @@ class t
             Main.BetterSaves.CurrentScreen--;
 
             RefreshSlots(___slots);
-
-            //__instance.OnSelectedSlots(__instance.SelectedSlot - 3);
             EventSystem.current.SetSelectedGameObject(___slots[__instance.SelectedSlot - 3].gameObject, null);
         }
         if (Main.BetterSaves.CurrentScreen < 3 && Main.BetterSaves.InputHandler.GetButtonDown(ButtonCode.InventoryRight))
@@ -91,30 +73,8 @@ class t
             Main.BetterSaves.CurrentScreen++;
 
             RefreshSlots(___slots);
-            //__instance.OnSelectedSlots(__instance.SelectedSlot + 3);
             EventSystem.current.SetSelectedGameObject(___slots[__instance.SelectedSlot + 3].gameObject, null);
         }
-
-
-        //if (!Input.GetKeyDown(KeyCode.Keypad9))
-        //    return;
-
-        //SaveSlot slot = ___slots[0];
-
-        //Main.BetterSaves.LogWarning(slot.name);
-        //foreach (Transform t in slot.transform)
-        //{
-        //    Main.BetterSaves.Log(t.name);
-        //}
-        //foreach (Component c in slot.gameObject.GetComponents<Component>())
-        //{
-        //    Main.BetterSaves.LogError(c.ToString());
-        //}
-
-        //foreach (var b in ___AllSlots)
-        //{
-        //    Main.BetterSaves.Log(b.name);
-        //}
     }
 
     public static void RefreshSlots(List<SaveSlot> slots)
@@ -130,21 +90,11 @@ class t
     }
 }
 
-//[HarmonyPatch(typeof(PersistentManager), nameof(PersistentManager.SaveGame))]
-//class PM_Save_Patch { }
-
 [HarmonyPatch(typeof(SelectSaveSlots), nameof(SelectSaveSlots.Clear))]
 class Slot_Clear_Patch
 {
     public static void Prefix(SelectSaveSlots __instance, List<SaveSlot> ___slots)
     {
-        var focuses = Object.FindObjectsOfType<KeepFocus>();
-        foreach (KeepFocus keepFocus in focuses)
-        {
-            Main.BetterSaves.LogWarning(keepFocus.name);
-            Main.BetterSaves.LogError(keepFocus.transform.parent?.name);
-        }
-
         // Create extra slots if they dont already exist
         if (___slots.Count <= 3)
             AddSlots(__instance, ___slots);
@@ -193,28 +143,18 @@ class Slot_Clear_Patch
             t2.FocusObjects.Add(slot3);
         }
 
-        for (int i = 3; i < 12; i++)
-        {
-            UpdateSlot(selector, slots, i);
-        }
-
         Main.BetterSaves.LogError("Added more save slots");
     }
 
     private static void AddEvents(EventsButton button, int idx, SelectSaveSlots selector)
     {
-        //button.onSelected.RemoveAllListeners();
+        button.onSelected.RemoveAllListeners();
         button.onSelected = new EventsButton.ButtonSelectedEvent();
         button.onSelected.AddListener(() => selector.OnSelectedSlots(idx));
 
-        //button.onClick.RemoveAllListeners();
+        button.onClick.RemoveAllListeners();
         button.onClick = new EventsButton.ButtonClickedEvent();
         button.onClick.AddListener(() => selector.OnAcceptSlots(idx));
-    }
-
-    private static void UpdateSlot(SelectSaveSlots selector, List<SaveSlot> slots, int index)
-    {
-
     }
 }
 
@@ -225,10 +165,6 @@ class t2
     {
         if (__instance.name == "UI_SLOT")
         {
-            foreach (var obj in ___allowedObjects)
-            {
-                Main.BetterSaves.Log(obj.name);
-            }
             FocusObjects = ___allowedObjects;
         }
     }

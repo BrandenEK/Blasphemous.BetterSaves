@@ -15,11 +15,6 @@ public class BetterSaves : BlasMod
 
     public int CurrentScreen { get; set; } = 0;
 
-    public int GetRealSlot(int slot)
-    {
-        return slot + 3 * _currentMultiplier;
-    }
-
     protected override void OnNewGame()
     {
         string name = System.DateTime.Now.ToString();
@@ -28,37 +23,9 @@ public class BetterSaves : BlasMod
 
     protected override void OnUpdate()
     {
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            LogError("Current save slot: " + PersistentManager.GetAutomaticSlot());
-            LogError("Current selected slot: " + SlotsWidget.SelectedSlot);
-            LogError("Current selected object: " + EventSystem.current.currentSelectedGameObject?.name);
-        }
-
         if (!SlotsWidget.IsShowing)
             return;
 
-        //if (_currentMultiplier > 0 && InputHandler.GetButtonDown(ButtonCode.InventoryLeft))
-        //{
-        //    LogWarning("Moving left");
-        //    _currentMultiplier--;
-        //    RefreshSlots();
-        //}
-        //if (_currentMultiplier < MAX_MULTIPLIER && InputHandler.GetButtonDown(ButtonCode.InventoryRight))
-        //{
-        //    LogWarning("Moving right");
-        //    _currentMultiplier++;
-        //    RefreshSlots();
-        //}
-    }
-
-    private void RefreshSlots()
-    {
-        int currentSlot = SlotsWidget.SelectedSlot;
-
-        SlotsWidget.Clear();
-        SlotsWidget.SetAllData(MainMenu, SelectSaveSlots.SlotsModes.Normal);
-        SlotsWidget.OnSelectedSlots(currentSlot);
     }
 
     public void SetSaveName(string name)
