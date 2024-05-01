@@ -19,6 +19,9 @@ public class SlotHandler
     public void StoreSlotList(List<SaveSlot> slotList) => _slotList = slotList;
     public void StoreFocusList(List<GameObject> focusList) => _focusList = focusList;
 
+    /// <summary>
+    /// Check for shoulder button input and change screen
+    /// </summary>
     public void UpdateSlots()
     {
         if (_slotList == null)
@@ -33,28 +36,28 @@ public class SlotHandler
 
         if (_currentScreen > 0 && Main.BetterSaves.InputHandler.GetButtonDown(ButtonCode.InventoryLeft))
         {
-            Main.BetterSaves.Log("Moving left to " + (SlotsWidget.SelectedSlot - 3));
-            _currentScreen--;
+            Main.BetterSaves.Log($"Moving left to screen {--_currentScreen}");
 
             RefreshSlots();
             EventSystem.current.SetSelectedGameObject(_slotList[SlotsWidget.SelectedSlot - 3].gameObject, null);
         }
-        if (_currentScreen < 3 && Main.BetterSaves.InputHandler.GetButtonDown(ButtonCode.InventoryRight))
+        if (_currentScreen < MAX_SCREENS && Main.BetterSaves.InputHandler.GetButtonDown(ButtonCode.InventoryRight))
         {
-            Main.BetterSaves.Log("Moving right to " + (SlotsWidget.SelectedSlot + 3));
-            _currentScreen++;
+            Main.BetterSaves.Log($"Moving right to screen {++_currentScreen}");
 
             RefreshSlots();
             EventSystem.current.SetSelectedGameObject(_slotList[SlotsWidget.SelectedSlot + 3].gameObject, null);
         }
     }
 
+    /// <summary>
+    /// Whenever opening or changing screens, change which slots are active
+    /// </summary>
     public void RefreshSlots()
     {
         if (_slotList == null)
             return;
 
-        // Only enable ones on the current screen
         for (int i = 0; i < _slotList.Count; i += 3)
         {
             bool screenActive = i / 3 == _currentScreen;
@@ -64,6 +67,9 @@ public class SlotHandler
         }
     }
 
+    /// <summary>
+    /// If new slots haven't already been created, duplicate the UI and adjust properties
+    /// </summary>
     public void CreateNewSlots()
     {
         // Ensure lists have been stored
@@ -74,10 +80,8 @@ public class SlotHandler
         if (_slotList.Count > 3)
             return;
 
-        int screensToAdd = 3;
-
         // Make more copies of the buttons
-        for (int i = 0; i < screensToAdd; i++)
+        for (int i = 0; i < MAX_SCREENS; i++)
         {
             GameObject slot1 = Object.Instantiate(_slotList[0].gameObject, _slotList[0].transform.parent);
             GameObject slot2 = Object.Instantiate(_slotList[1].gameObject, _slotList[1].transform.parent);
@@ -117,9 +121,12 @@ public class SlotHandler
             _focusList.Add(slot3);
         }
 
-        Main.BetterSaves.LogWarning($"Added {screensToAdd * 3} more save slots");
+        Main.BetterSaves.LogWarning($"Added {MAX_SCREENS * 3} more save slots");
     }
 
+    /// <summary>
+    /// Add select and click event handlers to the button
+    /// </summary>
     private void AddButtonEvents(EventsButton button, int idx)
     {
         button.onSelected.RemoveAllListeners();
@@ -141,4 +148,6 @@ public class SlotHandler
             return x_slotsWidget;
         }
     }
+
+    private const int MAX_SCREENS = 3;
 }
