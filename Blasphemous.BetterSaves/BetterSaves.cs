@@ -1,15 +1,15 @@
-﻿using Blasphemous.ModdingAPI;
-using Blasphemous.ModdingAPI.Input;
-using Framework.Managers;
+﻿using Blasphemous.BetterSaves.Naming;
+using Blasphemous.ModdingAPI;
 using Gameplay.UI.Others.MenuLogic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace Blasphemous.BetterSaves;
 
 public class BetterSaves : BlasMod
 {
     public BetterSaves() : base(ModInfo.MOD_ID, ModInfo.MOD_NAME, ModInfo.MOD_AUTHOR, ModInfo.MOD_VERSION) { }
+
+    public NameHandler NameHandler { get; } = new();
 
     private int _currentMultiplier = 0;
 
@@ -18,7 +18,7 @@ public class BetterSaves : BlasMod
     protected override void OnNewGame()
     {
         string name = System.DateTime.Now.ToString();
-        SetSaveName(name);
+        NameHandler.SetSaveName(name);
     }
 
     protected override void OnUpdate()
@@ -28,10 +28,6 @@ public class BetterSaves : BlasMod
 
     }
 
-    public void SetSaveName(string name)
-    {
-        Core.Events.SetFlag("NAME_" + name, true, true);
-    }
 
     private NewMainMenu x_mainMenu = null;
     private NewMainMenu MainMenu

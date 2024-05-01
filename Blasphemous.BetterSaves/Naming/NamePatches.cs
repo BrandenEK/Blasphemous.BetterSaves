@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.UI;
 
-namespace Blasphemous.BetterSaves;
+namespace Blasphemous.BetterSaves.Naming;
 
 // Display name of save slot on select screen
 [HarmonyPatch(typeof(SelectSaveSlots), "SetAllData")]
