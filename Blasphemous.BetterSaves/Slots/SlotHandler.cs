@@ -81,47 +81,28 @@ public class SlotHandler(int maxScreens)
         if (_slotList.Count > 3)
             return;
 
-        // Make more copies of the buttons
-        for (int i = 0; i < _maxScreens; i++)
+        int totalSlots = _maxScreens * 3 + 3;
+
+        // Create all ui slots
+        for (int i = 3; i < totalSlots; i++)
         {
-            GameObject slot1 = Object.Instantiate(_slotList[0].gameObject, _slotList[0].transform.parent);
-            GameObject slot2 = Object.Instantiate(_slotList[1].gameObject, _slotList[1].transform.parent);
-            GameObject slot3 = Object.Instantiate(_slotList[2].gameObject, _slotList[2].transform.parent);
+            GameObject slot = Object.Instantiate(_slotList[i % 3].gameObject, _slotList[0].transform.parent);
+            slot.name = $"slot{i}";
 
-            slot1.name = $"slot{i * 3 + 3}";
-            slot2.name = $"slot{i * 3 + 4}";
-            slot3.name = $"slot{i * 3 + 5}";
+            _slotList.Add(slot.GetComponent<SaveSlot>());
+            _focusList.Add(slot);
+        }
 
-            EventsButton button1 = slot1.GetComponent<EventsButton>();
-            EventsButton button2 = slot2.GetComponent<EventsButton>();
-            EventsButton button3 = slot3.GetComponent<EventsButton>();
+        // Set navigation and events for each one
+        for (int i = 3; i < totalSlots; i++)
+        {
+            EventsButton button = _slotList[i].GetComponent<EventsButton>();
+            AddButtonEvents(button, i);
 
-            Navigation nav1 = button1.navigation;
-            nav1.selectOnUp = button3;
-            nav1.selectOnDown = button2;
-            button1.navigation = nav1;
-
-            Navigation nav2 = button2.navigation;
-            nav2.selectOnUp = button1;
-            nav2.selectOnDown = button3;
-            button2.navigation = nav2;
-
-            Navigation nav3 = button3.navigation;
-            nav3.selectOnUp = button2;
-            nav3.selectOnDown = button1;
-            button3.navigation = nav3;
-
-            AddButtonEvents(button1, i * 3 + 3);
-            AddButtonEvents(button2, i * 3 + 4);
-            AddButtonEvents(button3, i * 3 + 5);
-
-            _slotList.Add(slot1.GetComponent<SaveSlot>());
-            _slotList.Add(slot2.GetComponent<SaveSlot>());
-            _slotList.Add(slot3.GetComponent<SaveSlot>());
-
-            _focusList.Add(slot1);
-            _focusList.Add(slot2);
-            _focusList.Add(slot3);
+            Navigation nav = button.navigation;
+            nav.selectOnUp = _slotList[i + (i % 3 == 0 ? 2 : -1)].GetComponent<Selectable>();
+            nav.selectOnDown = _slotList[i + (i % 3 == 2 ? -2 : 1)].GetComponent<Selectable>();
+            button.navigation = nav;
         }
 
         Main.BetterSaves.LogWarning($"Added {_maxScreens * 3} more save slots");
