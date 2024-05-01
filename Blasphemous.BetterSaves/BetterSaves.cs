@@ -8,8 +8,16 @@ public class BetterSaves : BlasMod
 {
     public BetterSaves() : base(ModInfo.MOD_ID, ModInfo.MOD_NAME, ModInfo.MOD_AUTHOR, ModInfo.MOD_VERSION) { }
 
-    public NameHandler NameHandler { get; } = new();
-    public SlotHandler SlotHandler { get; } = new();
+    public NameHandler NameHandler { get; private set; }
+    public SlotHandler SlotHandler { get; private set; }
+
+    protected override void OnInitialize()
+    {
+        Config cfg = ConfigHandler.Load<Config>();
+
+        NameHandler = new NameHandler();
+        SlotHandler = new SlotHandler(System.Math.Max(cfg.totalSlots, 3) / 3 - 1);
+    }
 
     protected override void OnNewGame()
     {

@@ -9,8 +9,9 @@ using UnityEngine.UI;
 
 namespace Blasphemous.BetterSaves.Slots;
 
-public class SlotHandler
+public class SlotHandler(int maxScreens)
 {
+    private readonly int _maxScreens = maxScreens;
     private int _currentScreen = 0;
 
     private List<SaveSlot> _slotList;
@@ -41,7 +42,7 @@ public class SlotHandler
             RefreshSlots();
             EventSystem.current.SetSelectedGameObject(_slotList[SlotsWidget.SelectedSlot - 3].gameObject, null);
         }
-        if (_currentScreen < MAX_SCREENS && Main.BetterSaves.InputHandler.GetButtonDown(ButtonCode.InventoryRight))
+        if (_currentScreen < _maxScreens && Main.BetterSaves.InputHandler.GetButtonDown(ButtonCode.InventoryRight))
         {
             Main.BetterSaves.Log($"Moving right to screen {++_currentScreen}");
 
@@ -81,7 +82,7 @@ public class SlotHandler
             return;
 
         // Make more copies of the buttons
-        for (int i = 0; i < MAX_SCREENS; i++)
+        for (int i = 0; i < _maxScreens; i++)
         {
             GameObject slot1 = Object.Instantiate(_slotList[0].gameObject, _slotList[0].transform.parent);
             GameObject slot2 = Object.Instantiate(_slotList[1].gameObject, _slotList[1].transform.parent);
@@ -96,6 +97,7 @@ public class SlotHandler
             EventsButton button3 = slot3.GetComponent<EventsButton>();
 
             Navigation nav1 = button1.navigation;
+            nav1.selectOnUp = button3;
             nav1.selectOnDown = button2;
             button1.navigation = nav1;
 
@@ -106,6 +108,7 @@ public class SlotHandler
 
             Navigation nav3 = button3.navigation;
             nav3.selectOnUp = button2;
+            nav3.selectOnDown = button1;
             button3.navigation = nav3;
 
             AddButtonEvents(button1, i * 3 + 3);
@@ -121,7 +124,7 @@ public class SlotHandler
             _focusList.Add(slot3);
         }
 
-        Main.BetterSaves.LogWarning($"Added {MAX_SCREENS * 3} more save slots");
+        Main.BetterSaves.LogWarning($"Added {_maxScreens * 3} more save slots");
     }
 
     /// <summary>
@@ -148,6 +151,4 @@ public class SlotHandler
             return x_slotsWidget;
         }
     }
-
-    private const int MAX_SCREENS = 3;
 }
