@@ -1,6 +1,7 @@
 ﻿using Blasphemous.BetterSaves.Naming;
 using Blasphemous.BetterSaves.Slots;
 using Blasphemous.CheatConsole;
+using Blasphemous.Framework.Menus;
 using Blasphemous.ModdingAPI;
 
 namespace Blasphemous.BetterSaves;
@@ -40,5 +41,6 @@ public class BetterSaves : BlasMod
     protected override void OnRegisterServices(ModServiceProvider provider)
     {
         provider.RegisterCommand(new SlotsCommand());
+        provider.RegisterNewGameMenu(new NameMenu());
     }
 }
