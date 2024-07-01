@@ -1,6 +1,7 @@
 ﻿using Blasphemous.BetterSaves.Naming;
 using Blasphemous.BetterSaves.Slots;
 using Blasphemous.CheatConsole;
+using Blasphemous.Framework.Menus;
 using Blasphemous.ModdingAPI;
 
 namespace Blasphemous.BetterSaves;
@@ -21,6 +22,7 @@ public class BetterSaves : BlasMod
     protected override void OnInitialize()
     {
         Config cfg = ConfigHandler.Load<Config>();
+        LocalizationHandler.RegisterDefaultLanguage("en");
 
         NameHandler = new NameHandler();
         SlotHandler = new SlotHandler(System.Math.Max(cfg.totalSlots, 3) / 3 - 1);
@@ -40,5 +42,6 @@ public class BetterSaves : BlasMod
     protected override void OnRegisterServices(ModServiceProvider provider)
     {
         provider.RegisterCommand(new SlotsCommand());
+        provider.RegisterNewGameMenu(new NameMenu());
     }
 }

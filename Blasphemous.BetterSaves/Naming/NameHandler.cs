@@ -1,4 +1,5 @@
-﻿using Framework.Managers;
+﻿using Framework.Achievements;
+using Framework.Managers;
 
 namespace Blasphemous.BetterSaves.Naming;
 
@@ -12,11 +13,12 @@ public class NameHandler
     /// </summary>
     public bool TrySetSaveName(string name)
     {
-        if (Core.Events.GetFlag("NAMED"))
-            return false;
+        Achievement ach = new("SAVE_NAME")
+        {
+            Name = name
+        };
 
-        Core.Events.SetFlag("NAMED", true, true);
-        Core.Events.SetFlag("NAME_" + name, true, true);
+        Core.AchievementsManager.Achievements["SAVE_NAME"] = ach;
         return true;
     }
 }
