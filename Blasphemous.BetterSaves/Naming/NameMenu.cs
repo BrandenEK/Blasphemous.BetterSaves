@@ -10,13 +10,16 @@ namespace Blasphemous.BetterSaves.Naming;
 /// </summary>
 public class NameMenu : ModMenu
 {
-    /// <summary>
-    /// Creates a new name menu
-    /// </summary>
-    public NameMenu() : base("Better Saves Settings", 5) { }
-
     private TextOption _nameOption;
 
+    /// <summary>
+    /// This menu should always appear first
+    /// </summary>
+    protected override int Priority { get; } = int.MinValue;
+
+    /// <summary>
+    /// Create menu with a single text prompt
+    /// </summary>
     protected override void CreateUI(Transform ui)
     {
         TextCreator creator = new(this)
@@ -28,6 +31,9 @@ public class NameMenu : ModMenu
         _nameOption = creator.CreateOption("nameoption", ui, Vector2.zero, "Save file name:", false, true, 32);
     }
 
+    /// <summary>
+    /// When menu is closed, save the file name somewhere
+    /// </summary>
     public override void OnFinish()
     {
         Main.BetterSaves.LogWarning($"Completing saves menu with text: ({_nameOption.CurrentValue})");
