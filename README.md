@@ -12,4 +12,4 @@
 - Use the shoulder buttons to switch between screens on the slots menu
 - Total number of slots can be adjusted in the config file
 - Savegame 8 and 9 might be used for internal data, so maybe don't mess with them
-- Currently you can set the name through the 'slots' command, soon there will be a menu as well
+- Use the new-game menu or slots command to set the save file name
