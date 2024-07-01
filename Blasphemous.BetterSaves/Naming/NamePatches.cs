@@ -24,7 +24,7 @@ class SelectSaveSlotsData_Patch
             string slotName;
             if (i == 7 || i == 8)
             {
-                slotName = "Internal data (Don't delete)";
+                slotName = "Internal data (Don't touch)";
             }
             else
             {
