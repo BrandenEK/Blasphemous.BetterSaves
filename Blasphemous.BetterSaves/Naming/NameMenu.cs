@@ -1,6 +1,5 @@
 ﻿using Blasphemous.Framework.Menus;
 using Blasphemous.Framework.Menus.Options;
-using Framework.Managers;
 using UnityEngine;
 
 namespace Blasphemous.BetterSaves.Naming;
@@ -41,7 +40,6 @@ public class NameMenu : ModMenu
         if (string.IsNullOrEmpty(_nameOption.CurrentValue))
             return;
 
-        Main.BetterSaves.LogError("Current save slot: " + PersistentManager.GetAutomaticSlot());
         Main.BetterSaves.NameHandler.TrySetSaveName(_nameOption.CurrentValue);
     }
 }

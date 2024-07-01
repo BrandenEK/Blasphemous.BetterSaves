@@ -1,4 +1,5 @@
-﻿using Framework.Managers;
+﻿using Framework.Achievements;
+using Framework.Managers;
 using Gameplay.UI.Others.MenuLogic;
 using Gameplay.UI.Widgets;
 using HarmonyLib;
@@ -20,7 +21,7 @@ class SelectSaveSlotsData_Patch
             if (slotData == null)
                 continue;
 
-            string slotName = slotData.flags.flagsPreserve.Keys.FirstOrDefault(f => f.StartsWith("NAME_"))?.Substring(5);
+            string slotName = slotData.achievement.achievements.FirstOrDefault(x => x.Id == "SAVE_NAME")?.Name;
 
             if (string.IsNullOrEmpty(slotName))
                 continue;
@@ -42,5 +43,15 @@ class SaveSlotData_Patch
             return false;
         }
         return true;
+    }
+}
+
+// Add save name achievement whenever list is reset
+[HarmonyPatch(typeof(AchievementsManager), nameof(AchievementsManager.ResetPersistence))]
+class AchievementsManager_ResetPersistence_Patch
+{
+    public static void Postfix(AchievementsManager __instance)
+    {
+        __instance.Achievements.Add("SAVE_NAME", new Achievement("SAVE_NAME"));
     }
 }
