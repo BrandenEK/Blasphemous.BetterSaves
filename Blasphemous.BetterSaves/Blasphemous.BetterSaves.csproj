@@ -21,14 +21,9 @@
 
   <ItemGroup>
     <PackageReference Include="Blasphemous.CheatConsole" Version="1.0.0" />
-    <PackageReference Include="Blasphemous.ModdingAPI" Version="2.1.2" />
+    <PackageReference Include="Blasphemous.Framework.Menus" Version="0.3.0" />
+    <PackageReference Include="Blasphemous.ModdingAPI" Version="2.2.0" />
     <PackageReference Include="Blasphemous.ModdingReferences" Version="4.0.67" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="MenuFramework">
-      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Blasphemous\Modding\plugins\MenuFramework.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
   <Target Name="Development" AfterTargets="PostBuildEvent">
