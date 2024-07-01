@@ -21,10 +21,17 @@ class SelectSaveSlotsData_Patch
             if (slotData == null)
                 continue;
 
-            string slotName = slotData.achievement.achievements.FirstOrDefault(x => x.Id == "SAVE_NAME")?.Name;
-
-            if (string.IsNullOrEmpty(slotName))
-                continue;
+            string slotName;
+            if (i == 7 || i == 8)
+            {
+                slotName = "Internal data (Don't delete)";
+            }
+            else
+            {
+                slotName = slotData.achievement.achievements.FirstOrDefault(x => x.Id == "SAVE_NAME")?.Name;
+                if (string.IsNullOrEmpty(slotName))
+                    slotName = "Unamed save file";
+            }
 
             // Send extra info to the slot
             Main.BetterSaves.Log($"Displaying name for slot {i}: {slotName}");
@@ -39,7 +46,7 @@ class SaveSlotData_Patch
     {
         if (zoneName == "ignore")
         {
-            ___ZoneText.text += $"   ({info})";
+            ___ZoneText.text = $"{info}";
             return false;
         }
         return true;
