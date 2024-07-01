@@ -27,7 +27,8 @@ public class NameMenu : ModMenu
             LineSize = 500,
         };
 
-        _nameOption = creator.CreateOption("nameoption", ui, Vector2.zero, "Save file name:", false, true, 32);
+        string text = Main.BetterSaves.LocalizationHandler.Localize("menuop");
+        _nameOption = creator.CreateOption("nameoption", ui, Vector2.zero, $"{text}:", false, true, 32);
     }
 
     /// <summary>

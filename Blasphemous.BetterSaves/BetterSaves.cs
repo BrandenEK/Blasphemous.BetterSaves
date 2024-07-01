@@ -22,6 +22,7 @@ public class BetterSaves : BlasMod
     protected override void OnInitialize()
     {
         Config cfg = ConfigHandler.Load<Config>();
+        LocalizationHandler.RegisterDefaultLanguage("en");
 
         NameHandler = new NameHandler();
         SlotHandler = new SlotHandler(System.Math.Max(cfg.totalSlots, 3) / 3 - 1);

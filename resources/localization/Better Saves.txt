@@ -1,0 +1,4 @@
+lang: en
+menuop: Save file name
+svint: Internal data (Don't touch)
+svunm: Unamed save file

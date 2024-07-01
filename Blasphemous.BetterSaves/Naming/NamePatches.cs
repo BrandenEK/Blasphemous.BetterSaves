@@ -24,13 +24,13 @@ class SelectSaveSlotsData_Patch
             string slotName;
             if (i == 7 || i == 8)
             {
-                slotName = "Internal data (Don't touch)";
+                slotName = Main.BetterSaves.LocalizationHandler.Localize("svint");
             }
             else
             {
                 slotName = slotData.achievement.achievements.FirstOrDefault(x => x.Id == "SAVE_NAME")?.Name;
                 if (string.IsNullOrEmpty(slotName))
-                    slotName = "Unamed save file";
+                    slotName = Main.BetterSaves.LocalizationHandler.Localize("svunm");
             }
 
             // Send extra info to the slot
