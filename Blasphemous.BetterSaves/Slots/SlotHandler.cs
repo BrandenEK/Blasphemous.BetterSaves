@@ -1,4 +1,5 @@
 ﻿using Blasphemous.ModdingAPI.Input;
+using Framework.Managers;
 using Gameplay.UI.Others.Buttons;
 using Gameplay.UI.Others.MenuLogic;
 using Gameplay.UI.Widgets;
@@ -123,6 +124,7 @@ public class SlotHandler(int maxScreens)
         button.onClick.RemoveAllListeners();
         button.onClick = new EventsButton.ButtonClickedEvent();
         button.onClick.AddListener(() => SlotsWidget.OnAcceptSlots(idx));
+        button.onClick.AddListener(() => Core.Audio.PlayOneShot("event:/SFX/UI/EquipItem"));
     }
 
     private SelectSaveSlots x_slotsWidget = null;
