@@ -29,15 +29,9 @@ public class SlotHandler(int maxScreens)
     /// </summary>
     public void UpdateSlots()
     {
-        if (_slotList == null)
+        // If slots menu is not visible, dont process input
+        if (_slotList == null || !SlotsWidget.IsShowing || !SlotsWidget.gameObject.activeSelf)
             return;
-
-        // If not on save slot menu, reset screen to zero
-        if (!SlotsWidget.IsShowing)
-        {
-            _currentScreen = 0;
-            return;
-        }
 
         if (_currentScreen > 0 && Main.BetterSaves.InputHandler.GetButtonDown(ButtonCode.InventoryLeft))
         {
@@ -46,6 +40,7 @@ public class SlotHandler(int maxScreens)
             RefreshSlots();
             EventSystem.current.SetSelectedGameObject(_slotList[SlotsWidget.SelectedSlot - 3].gameObject, null);
         }
+
         if (_currentScreen < _maxScreens && Main.BetterSaves.InputHandler.GetButtonDown(ButtonCode.InventoryRight))
         {
             Main.BetterSaves.Log($"Moving right to screen {++_currentScreen}");
