@@ -3,6 +3,7 @@ using Blasphemous.ModdingAPI.Helpers;
 using Framework.Managers;
 using Gameplay.UI;
 using Gameplay.UI.Others.MenuLogic;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -38,17 +39,43 @@ public class CorruptHandler
     /// </summary>
     public bool ShouldDisplayBox(int slot)
     {
+        // If the box is closing, immediately start the game
         if (_pressedAccept)
         {
             _pressedAccept = false;
             return false;
         }
 
+        // Ensure save data for this slot exists
+        var slotData = Core.Persistence.GetSlotData(slot);
+        if (slotData == null)
+            return false;
+
+        // Get mod list from the achievement description
+        string modText = slotData.achievement.achievements.FirstOrDefault(x => x.Id == "SAVE_NAME")?.Description ?? string.Empty;
+
+        // Get list of mod ids from the save file
+        IEnumerable<string> savedModIds = modText.Split(new string[] { "~~~" }, System.StringSplitOptions.RemoveEmptyEntries);
+        ModLog.Debug($"Saved mods: {string.Join(", ", savedModIds.ToArray())}");
+
+        // Get list of mod ids that are currently loaded
+        IEnumerable<string> currentModIds = ModHelper.LoadedMods.Select(x => x.Id);
+        ModLog.Debug($"Current mods: {string.Join(", ", currentModIds.ToArray())}");
+
+        // Get list of mod ids that are in the save but not currently loaded
+        IEnumerable<string> missingModIds = savedModIds.Where(x => !currentModIds.Any(y => x == y));
+        ModLog.Debug($"Missing mods: {string.Join(", ", missingModIds.ToArray())}");
+
+        // Get list of mod ids that are currently loaded but not in the save
+        IEnumerable<string> addedModIds = currentModIds.Where(x => !savedModIds.Any(y => x == y));
+        ModLog.Debug($"Added mods: {string.Join(", ", addedModIds.ToArray())}");
+
+
         // Check if mods are invalid
 
-        ModLog.Info($"Displaying confirmation box for slot {slot}");
         _isShowing = true;
         _currentSlot = slot;
+        ModLog.Info($"Displaying confirmation box for slot {slot}");
         UIController.instance.ShowConfirmationWidget("These mods are missing [Randomizer, Multiworld]. Are you sure you want to continue?", OnAccept, OnDissent);
         return true;
     }
