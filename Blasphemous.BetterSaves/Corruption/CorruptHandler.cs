@@ -83,7 +83,6 @@ public class CorruptHandler
             sb.AppendLine($"Mods updated since last save: {updatedMods.FormatList(false)}");
         if (downgradedMods.Any())
             sb.AppendLine($"Mods downgraded since last save: {downgradedMods.FormatList(false)}");
-
         sb.AppendLine("Are you sure you wish to continue?");
 
         _isShowing = true;
