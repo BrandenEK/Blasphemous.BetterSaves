@@ -5,6 +5,7 @@ using Gameplay.UI;
 using Gameplay.UI.Others.MenuLogic;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using UnityEngine;
 
 namespace Blasphemous.BetterSaves.Corruption;
@@ -28,10 +29,10 @@ public class CorruptHandler
     /// </summary>
     public void LoadGame()
     {
-        string[] modIds = ModHelper.LoadedMods.Select(x => x.Id).ToArray();
-        ModLog.Info($"Storing info for {modIds.Length} loaded mods");
+        string[] mods = ModHelper.LoadedMods.Select(x => x.Name).ToArray();
+        ModLog.Info($"Storing info for {mods.Length} loaded mods");
 
-        Core.AchievementsManager.Achievements["SAVE_NAME"].Description = string.Join("~~~", modIds);
+        Core.AchievementsManager.Achievements["SAVE_NAME"].Description = string.Join("~~~", mods);
     }
 
     /// <summary>
@@ -55,38 +56,37 @@ public class CorruptHandler
         string modText = slotData.achievement.achievements.FirstOrDefault(x => x.Id == "SAVE_NAME")?.Description ?? string.Empty;
 
         // Get list of mod ids from the save file
-        IEnumerable<string> savedModIds = modText.Split(new string[] { "~~~" }, System.StringSplitOptions.RemoveEmptyEntries);
-        ModLog.Debug($"Saved mods: {string.Join(", ", savedModIds.ToArray())}");
+        IEnumerable<string> savedMods = modText.Split(new string[] { "~~~" }, System.StringSplitOptions.RemoveEmptyEntries);
+        ModLog.Debug($"Saved mods: {string.Join(", ", savedMods.ToArray())}");
 
         // Get list of mod ids that are currently loaded
-        IEnumerable<string> currentModIds = ModHelper.LoadedMods.Select(x => x.Id);
-        ModLog.Debug($"Current mods: {string.Join(", ", currentModIds.ToArray())}");
+        IEnumerable<string> currentMods = ModHelper.LoadedMods.Select(x => x.Name);
+        ModLog.Debug($"Current mods: {string.Join(", ", currentMods.ToArray())}");
 
         // Get list of mod ids that are in the save but not currently loaded
-        IEnumerable<string> missingModIds = savedModIds.Where(x => !currentModIds.Any(y => x == y));
-        ModLog.Debug($"Missing mods: {string.Join(", ", missingModIds.ToArray())}");
+        IEnumerable<string> missingMods = savedMods.Where(x => !currentMods.Any(y => x == y));
+        ModLog.Debug($"Missing mods: {string.Join(", ", missingMods.ToArray())}");
 
         // Get list of mod ids that are currently loaded but not in the save
-        IEnumerable<string> addedModIds = currentModIds.Where(x => !savedModIds.Any(y => x == y));
-        ModLog.Debug($"Added mods: {string.Join(", ", addedModIds.ToArray())}");
+        IEnumerable<string> addedMods = currentMods.Where(x => !savedMods.Any(y => x == y));
+        ModLog.Debug($"Added mods: {string.Join(", ", addedMods.ToArray())}");
 
         // Ensure there are either missing or added mods
-        if (!missingModIds.Any() && !addedModIds.Any())
+        if (!missingMods.Any() && !addedMods.Any())
             return false;
 
-        // ???
-        string displayText = string.Empty;
-
-        if (missingModIds.Any())
-            displayText += $"Mods missing since last save: {string.Join(", ", missingModIds.ToArray())}\n";
-        if (addedModIds.Any())
-            displayText += $"Mods added since last save: {string.Join(", ", addedModIds.ToArray())}\n";
-        displayText += "Are you sure you wish to continue?";
+        // Create display text
+        StringBuilder sb = new();
+        if (missingMods.Any())
+            sb.AppendLine($"Mods missing since last save: {string.Join(", ", missingMods.ToArray())}");
+        if (addedMods.Any())
+            sb.AppendLine($"Mods added since last save: {string.Join(", ", addedMods.ToArray())}");
+        sb.AppendLine("Are you sure you wish to continue?");
 
         _isShowing = true;
         _currentSlot = slot;
         ModLog.Info($"Displaying confirmation box for slot {slot}");
-        UIController.instance.ShowConfirmationWidget(displayText, OnAccept, OnDissent);
+        UIController.instance.ShowConfirmationWidget(sb.ToString(), OnAccept, OnDissent);
         return true;
     }
 
