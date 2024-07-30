@@ -1,5 +1,4 @@
-﻿using Blasphemous.BetterSaves.Extensions;
-using Blasphemous.ModdingAPI;
+﻿using Blasphemous.ModdingAPI;
 using Blasphemous.ModdingAPI.Helpers;
 using Framework.Managers;
 using Gameplay.UI;
@@ -67,9 +66,11 @@ public class CorruptHandler
         // Get lists of invalidities
         IEnumerable<SerializedModInfo> missingMods = Invalidities.GetMissing()(savedMods, currentMods);
         IEnumerable<SerializedModInfo> addedMods = Invalidities.GetAdded()(savedMods, currentMods);
+        IEnumerable<SerializedModInfo> updatedMods = Invalidities.GetUpdated()(savedMods, currentMods);
+        IEnumerable<SerializedModInfo> downgradedMods = Invalidities.GetDowngraded()(savedMods, currentMods);
 
         // Ensure there is at least one invalidity
-        if (!missingMods.Any() && !addedMods.Any())
+        if (!missingMods.Any() && !addedMods.Any() && !updatedMods.Any() && !downgradedMods.Any())
             return false;
 
         // Create display text
@@ -78,6 +79,11 @@ public class CorruptHandler
             sb.AppendLine($"Mods missing since last save: {missingMods.FormatList(false)}");
         if (addedMods.Any())
             sb.AppendLine($"Mods added since last save: {addedMods.FormatList(false)}");
+        if (updatedMods.Any())
+            sb.AppendLine($"Mods updated since last save: {updatedMods.FormatList(false)}");
+        if (downgradedMods.Any())
+            sb.AppendLine($"Mods downgraded since last save: {downgradedMods.FormatList(false)}");
+
         sb.AppendLine("Are you sure you wish to continue?");
 
         _isShowing = true;
