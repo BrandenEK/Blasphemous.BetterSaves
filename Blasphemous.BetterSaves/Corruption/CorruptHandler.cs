@@ -1,4 +1,5 @@
-﻿using Blasphemous.ModdingAPI;
+﻿using Blasphemous.BetterSaves.Extensions;
+using Blasphemous.ModdingAPI;
 using Blasphemous.ModdingAPI.Helpers;
 using Framework.Managers;
 using Gameplay.UI;
@@ -57,19 +58,17 @@ public class CorruptHandler
 
         // Get list of mod ids from the save file
         IEnumerable<string> savedMods = modText.Split(new string[] { "~~~" }, System.StringSplitOptions.RemoveEmptyEntries);
-        ModLog.Debug($"Saved mods: {string.Join(", ", savedMods.ToArray())}");
+        ModLog.Debug($"Saved mods: {savedMods.FormatList()}");
 
         // Get list of mod ids that are currently loaded
         IEnumerable<string> currentMods = ModHelper.LoadedMods.Select(x => x.Name);
-        ModLog.Debug($"Current mods: {string.Join(", ", currentMods.ToArray())}");
+        ModLog.Debug($"Current mods: {currentMods.FormatList()}");
 
         // Get list of mod ids that are in the save but not currently loaded
         IEnumerable<string> missingMods = savedMods.Where(x => !currentMods.Any(y => x == y));
-        ModLog.Debug($"Missing mods: {string.Join(", ", missingMods.ToArray())}");
 
         // Get list of mod ids that are currently loaded but not in the save
         IEnumerable<string> addedMods = currentMods.Where(x => !savedMods.Any(y => x == y));
-        ModLog.Debug($"Added mods: {string.Join(", ", addedMods.ToArray())}");
 
         // Ensure there are either missing or added mods
         if (!missingMods.Any() && !addedMods.Any())
@@ -78,9 +77,9 @@ public class CorruptHandler
         // Create display text
         StringBuilder sb = new();
         if (missingMods.Any())
-            sb.AppendLine($"Mods missing since last save: {string.Join(", ", missingMods.ToArray())}");
+            sb.AppendLine($"Mods missing since last save: {missingMods.FormatList()}");
         if (addedMods.Any())
-            sb.AppendLine($"Mods added since last save: {string.Join(", ", addedMods.ToArray())}");
+            sb.AppendLine($"Mods added since last save: {addedMods.FormatList()}");
         sb.AppendLine("Are you sure you wish to continue?");
 
         _isShowing = true;
