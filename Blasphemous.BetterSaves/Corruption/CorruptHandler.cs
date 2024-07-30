@@ -65,8 +65,8 @@ public class CorruptHandler
         ModLog.Debug($"Current mods: {currentMods.FormatList(true)}");
 
         // Get lists of invalidities
-        IEnumerable<SerializedModInfo> missingMods = savedMods.Where(x => !currentMods.Any(y => x.Name == y.Name));
-        IEnumerable<SerializedModInfo> addedMods = currentMods.Where(x => !savedMods.Any(y => x.Name == y.Name));
+        IEnumerable<SerializedModInfo> missingMods = Invalidities.GetMissing()(savedMods, currentMods);
+        IEnumerable<SerializedModInfo> addedMods = Invalidities.GetAdded()(savedMods, currentMods);
 
         // Ensure there is at least one invalidity
         if (!missingMods.Any() && !addedMods.Any())
