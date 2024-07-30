@@ -4,6 +4,7 @@ using Blasphemous.ModdingAPI.Helpers;
 using Framework.Managers;
 using Gameplay.UI;
 using Gameplay.UI.Others.MenuLogic;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -30,10 +31,11 @@ public class CorruptHandler
     /// </summary>
     public void LoadGame()
     {
-        string[] mods = ModHelper.LoadedMods.Select(x => x.Name).ToArray();
-        ModLog.Info($"Storing info for {mods.Length} loaded mods");
+        var mods = ModHelper.LoadedMods.Select(x => new SerializedModInfo(x.Name, x.Version));
+        string json = JsonConvert.SerializeObject(mods, Formatting.None);
 
-        Core.AchievementsManager.Achievements["SAVE_NAME"].Description = string.Join("~~~", mods);
+        ModLog.Info($"Storing info for {mods.Count()} loaded mods");
+        Core.AchievementsManager.Achievements["SAVE_NAME"].Description = json;
     }
 
     /// <summary>
@@ -54,21 +56,21 @@ public class CorruptHandler
             return false;
 
         // Get mod list from the achievement description
-        string modText = slotData.achievement.achievements.FirstOrDefault(x => x.Id == "SAVE_NAME")?.Description ?? string.Empty;
+        string modText = slotData.achievement.achievements.FirstOrDefault(x => x.Id == "SAVE_NAME")?.Description ?? "[]";
 
         // Get list of mod ids from the save file
-        IEnumerable<string> savedMods = modText.Split(new string[] { "~~~" }, System.StringSplitOptions.RemoveEmptyEntries);
-        ModLog.Debug($"Saved mods: {savedMods.FormatList()}");
+        IEnumerable<SerializedModInfo> savedMods = JsonConvert.DeserializeObject<SerializedModInfo[]>(modText);
+        ModLog.Debug($"Saved mods: {savedMods.FormatList(true)}");
 
         // Get list of mod ids that are currently loaded
-        IEnumerable<string> currentMods = ModHelper.LoadedMods.Select(x => x.Name);
-        ModLog.Debug($"Current mods: {currentMods.FormatList()}");
+        IEnumerable<SerializedModInfo> currentMods = ModHelper.LoadedMods.Select(x => new SerializedModInfo(x.Name, x.Version));
+        ModLog.Debug($"Current mods: {currentMods.FormatList(true)}");
 
         // Get list of mod ids that are in the save but not currently loaded
-        IEnumerable<string> missingMods = savedMods.Where(x => !currentMods.Any(y => x == y));
+        IEnumerable<SerializedModInfo> missingMods = savedMods.Where(x => !currentMods.Any(y => x.Name == y.Name));
 
         // Get list of mod ids that are currently loaded but not in the save
-        IEnumerable<string> addedMods = currentMods.Where(x => !savedMods.Any(y => x == y));
+        IEnumerable<SerializedModInfo> addedMods = currentMods.Where(x => !savedMods.Any(y => x.Name == y.Name));
 
         // Ensure there are either missing or added mods
         if (!missingMods.Any() && !addedMods.Any())
@@ -77,9 +79,9 @@ public class CorruptHandler
         // Create display text
         StringBuilder sb = new();
         if (missingMods.Any())
-            sb.AppendLine($"Mods missing since last save: {missingMods.FormatList()}");
+            sb.AppendLine($"Mods missing since last save: {missingMods.FormatList(false)}");
         if (addedMods.Any())
-            sb.AppendLine($"Mods added since last save: {addedMods.FormatList()}");
+            sb.AppendLine($"Mods added since last save: {addedMods.FormatList(false)}");
         sb.AppendLine("Are you sure you wish to continue?");
 
         _isShowing = true;
