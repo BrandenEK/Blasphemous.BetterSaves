@@ -22,7 +22,7 @@
   <ItemGroup>
     <PackageReference Include="Blasphemous.CheatConsole" Version="1.0.0" />
     <PackageReference Include="Blasphemous.Framework.Menus" Version="0.3.0" />
-    <PackageReference Include="Blasphemous.ModdingAPI" Version="2.3.1" />
+    <PackageReference Include="Blasphemous.ModdingAPI" Version="2.4.0" />
     <PackageReference Include="Blasphemous.ModdingReferences" Version="4.0.67" />
   </ItemGroup>
 
