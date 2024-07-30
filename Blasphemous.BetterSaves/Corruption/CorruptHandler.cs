@@ -70,13 +70,23 @@ public class CorruptHandler
         IEnumerable<string> addedModIds = currentModIds.Where(x => !savedModIds.Any(y => x == y));
         ModLog.Debug($"Added mods: {string.Join(", ", addedModIds.ToArray())}");
 
+        // Ensure there are either missing or added mods
+        if (!missingModIds.Any() && !addedModIds.Any())
+            return false;
 
-        // Check if mods are invalid
+        // ???
+        string displayText = string.Empty;
+
+        if (missingModIds.Any())
+            displayText += $"Mods missing since last save: {string.Join(", ", missingModIds.ToArray())}\n";
+        if (addedModIds.Any())
+            displayText += $"Mods added since last save: {string.Join(", ", addedModIds.ToArray())}\n";
+        displayText += "Are you sure you wish to continue?";
 
         _isShowing = true;
         _currentSlot = slot;
         ModLog.Info($"Displaying confirmation box for slot {slot}");
-        UIController.instance.ShowConfirmationWidget("These mods are missing [Randomizer, Multiworld]. Are you sure you want to continue?", OnAccept, OnDissent);
+        UIController.instance.ShowConfirmationWidget(displayText, OnAccept, OnDissent);
         return true;
     }
 
