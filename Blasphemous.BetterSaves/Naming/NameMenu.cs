@@ -1,5 +1,6 @@
 ﻿using Blasphemous.Framework.Menus;
 using Blasphemous.Framework.Menus.Options;
+using Blasphemous.ModdingAPI;
 using UnityEngine;
 
 namespace Blasphemous.BetterSaves.Naming;
@@ -44,7 +45,7 @@ public class NameMenu : ModMenu
     /// </summary>
     public override void OnFinish()
     {
-        Main.BetterSaves.LogWarning($"Completing saves menu with text: ({_nameOption.CurrentValue})");
+        ModLog.Warn($"Completing saves menu with text: ({_nameOption.CurrentValue})");
 
         if (string.IsNullOrEmpty(_nameOption.CurrentValue))
             return;

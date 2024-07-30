@@ -1,4 +1,4 @@
-﻿using Framework.Achievements;
+﻿using Blasphemous.ModdingAPI;
 using Framework.Managers;
 using Gameplay.UI.Others.MenuLogic;
 using Gameplay.UI.Widgets;
@@ -34,7 +34,7 @@ class SelectSaveSlotsData_Patch
             }
 
             // Send extra info to the slot
-            Main.BetterSaves.Log($"Displaying name for slot {i}: {slotName}");
+            ModLog.Info($"Displaying name for slot {i}: {slotName}");
             ___slots[i].SetData("ignore", slotName, 0, false, false, false, 0, SelectSaveSlots.SlotsModes.Normal);
         }
     }
@@ -50,15 +50,5 @@ class SaveSlotData_Patch
             return false;
         }
         return true;
-    }
-}
-
-// Add save name achievement whenever list is reset
-[HarmonyPatch(typeof(AchievementsManager), nameof(AchievementsManager.ResetPersistence))]
-class AchievementsManager_ResetPersistence_Patch
-{
-    public static void Postfix(AchievementsManager __instance)
-    {
-        __instance.Achievements.Add("SAVE_NAME", new Achievement("SAVE_NAME"));
     }
 }
