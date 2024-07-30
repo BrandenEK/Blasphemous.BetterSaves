@@ -1,5 +1,7 @@
 ﻿using Gameplay.UI.Others.MenuLogic;
+using Gameplay.UI.Widgets;
 using HarmonyLib;
+using System.Collections.Generic;
 
 namespace Blasphemous.BetterSaves.Corruption;
 
@@ -19,5 +21,5 @@ class SaveSlots_Update_Patch
 class SaveSlots_Accept_Patch
 {
     [HarmonyPriority(Priority.First)]
-    public static bool Prefix(ref int idxSlot) => !Main.BetterSaves.CorruptHandler.ShouldDisplayBox(idxSlot);
+    public static bool Prefix(ref int idxSlot, List<SaveSlot> ___slots) => ___slots[idxSlot].IsEmpty || !Main.BetterSaves.CorruptHandler.ShouldDisplayBox(idxSlot);
 }
