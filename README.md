@@ -7,6 +7,7 @@
 ## Features
 - Increases the amount of usable save slots (Default 12)
 - Allows you to name each save file
+- Displays warning popup when attempting to load a save file with differing mods
 
 ## Notes
 - Use the shoulder buttons to switch between screens on the slots menu
