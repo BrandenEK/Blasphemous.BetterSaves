@@ -5,21 +5,23 @@ using UnityEngine;
 
 namespace Blasphemous.BetterSaves.Corruption;
 
+/// <summary>
+/// Handles verifying if a save file will become corrupted
+/// </summary>
 public class CorruptHandler
 {
+    /// <summary>
+    /// Is the mod confirmation box currently showing
+    /// </summary>
     public bool IsShowingConfirmation => _isShowing;
 
     private bool _isShowing = false;
     private bool _pressedAccept = false;
     private int _currentSlot = -1;
 
-    public void TempUpdate()
-    {
-        if (UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.P))
-        {
-        }
-    }
-
+    /// <summary>
+    /// Whether the confirmation box is about to display
+    /// </summary>
     public bool ShouldDisplayBox(int slot)
     {
         if (_pressedAccept)
@@ -28,7 +30,9 @@ public class CorruptHandler
             return false;
         }
 
-        ModLog.Error("Opening slot " + slot);
+        // Check if mods are invalid
+
+        ModLog.Info($"Displaying confirmation box for slot {slot}");
         _isShowing = true;
         _currentSlot = slot;
         UIController.instance.ShowConfirmationWidget("These mods are missing [Randomizer, Multiworld]. Are you sure you want to continue?", OnAccept, OnDissent);
@@ -37,7 +41,8 @@ public class CorruptHandler
 
     private void OnAccept()
     {
-        ModLog.Warn("Accept slots");
+        ModLog.Warn("Corruption confirmation: accept");
+
         _isShowing = false;
         _pressedAccept = true;
         Object.FindObjectOfType<SelectSaveSlots>().OnAcceptSlots(_currentSlot);
@@ -45,7 +50,8 @@ public class CorruptHandler
 
     private void OnDissent()
     {
-        ModLog.Warn("Said no to slots");
+        ModLog.Warn("Corruption confirmation: dissent");
+
         _isShowing = false;
     }
 }

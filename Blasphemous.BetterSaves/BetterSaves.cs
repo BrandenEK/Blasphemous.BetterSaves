@@ -36,7 +36,6 @@ public class BetterSaves : BlasMod
     /// </summary>
     protected override void OnUpdate()
     {
-        CorruptHandler.TempUpdate();
         SlotHandler.UpdateSlots();
     }
 
