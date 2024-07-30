@@ -34,9 +34,17 @@ public class BetterSaves : BlasMod
     /// <summary>
     /// Process handlers
     /// </summary>
+    protected override void OnNewGame()
+    {
+        CorruptHandler.StoreModInfo();
+    }
+
+    /// <summary>
+    /// Process handlers
+    /// </summary>
     protected override void OnLoadGame()
     {
-        CorruptHandler.LoadGame();
+        CorruptHandler.StoreModInfo();
     }
 
     /// <summary>

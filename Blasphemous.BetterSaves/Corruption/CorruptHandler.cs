@@ -29,7 +29,7 @@ public class CorruptHandler
     /// <summary>
     /// Stores all loaded mods used with this save file
     /// </summary>
-    public void LoadGame()
+    public void StoreModInfo()
     {
         var mods = ModHelper.LoadedMods.Select(x => new SerializedModInfo(x.Name, x.Version));
         string json = JsonConvert.SerializeObject(mods, Formatting.None);
@@ -55,24 +55,20 @@ public class CorruptHandler
         if (slotData == null)
             return false;
 
-        // Get mod list from the achievement description
-        string modText = slotData.achievement.achievements.FirstOrDefault(x => x.Id == "SAVE_NAME")?.Description ?? "[]";
-
-        // Get list of mod ids from the save file
-        IEnumerable<SerializedModInfo> savedMods = JsonConvert.DeserializeObject<SerializedModInfo[]>(modText);
+        // Get list of mods from the save file
+        string json = slotData.achievement.achievements.FirstOrDefault(x => x.Id == "SAVE_NAME")?.Description ?? "[]";
+        IEnumerable<SerializedModInfo> savedMods = JsonConvert.DeserializeObject<SerializedModInfo[]>(json);
         ModLog.Debug($"Saved mods: {savedMods.FormatList(true)}");
 
-        // Get list of mod ids that are currently loaded
+        // Get list of mods that are currently loaded
         IEnumerable<SerializedModInfo> currentMods = ModHelper.LoadedMods.Select(x => new SerializedModInfo(x.Name, x.Version));
         ModLog.Debug($"Current mods: {currentMods.FormatList(true)}");
 
-        // Get list of mod ids that are in the save but not currently loaded
+        // Get lists of invalidities
         IEnumerable<SerializedModInfo> missingMods = savedMods.Where(x => !currentMods.Any(y => x.Name == y.Name));
-
-        // Get list of mod ids that are currently loaded but not in the save
         IEnumerable<SerializedModInfo> addedMods = currentMods.Where(x => !savedMods.Any(y => x.Name == y.Name));
 
-        // Ensure there are either missing or added mods
+        // Ensure there is at least one invalidity
         if (!missingMods.Any() && !addedMods.Any())
             return false;
 
