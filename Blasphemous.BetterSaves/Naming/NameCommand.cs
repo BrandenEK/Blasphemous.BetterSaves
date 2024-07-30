@@ -3,12 +3,12 @@ using Framework.Managers;
 using System;
 using System.Collections.Generic;
 
-namespace Blasphemous.BetterSaves;
+namespace Blasphemous.BetterSaves.Naming;
 
 /// <summary>
 /// Provides functionality for naming slots
 /// </summary>
-public class SlotsCommand : ModCommand
+public class NameCommand : ModCommand
 {
     protected override string CommandName { get; } = "slots";
 

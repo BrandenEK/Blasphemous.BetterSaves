@@ -44,7 +44,7 @@ public class BetterSaves : BlasMod
     /// </summary>
     protected override void OnRegisterServices(ModServiceProvider provider)
     {
-        provider.RegisterCommand(new SlotsCommand());
+        provider.RegisterCommand(new NameCommand());
         provider.RegisterNewGameMenu(new NameMenu());
     }
 }
