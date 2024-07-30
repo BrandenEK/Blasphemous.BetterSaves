@@ -1,5 +1,4 @@
 ﻿using Blasphemous.ModdingAPI;
-using Framework.Achievements;
 using Framework.Managers;
 using Gameplay.UI.Others.MenuLogic;
 using Gameplay.UI.Widgets;
@@ -51,15 +50,5 @@ class SaveSlotData_Patch
             return false;
         }
         return true;
-    }
-}
-
-// Add save name achievement whenever list is reset
-[HarmonyPatch(typeof(AchievementsManager), nameof(AchievementsManager.ResetPersistence))]
-class AchievementsManager_ResetPersistence_Patch
-{
-    public static void Postfix(AchievementsManager __instance)
-    {
-        __instance.Achievements.Add("SAVE_NAME", new Achievement("SAVE_NAME"));
     }
 }
