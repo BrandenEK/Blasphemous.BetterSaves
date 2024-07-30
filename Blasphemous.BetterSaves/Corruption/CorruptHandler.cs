@@ -1,6 +1,9 @@
 ﻿using Blasphemous.ModdingAPI;
+using Blasphemous.ModdingAPI.Helpers;
+using Framework.Managers;
 using Gameplay.UI;
 using Gameplay.UI.Others.MenuLogic;
+using System.Linq;
 using UnityEngine;
 
 namespace Blasphemous.BetterSaves.Corruption;
@@ -18,6 +21,17 @@ public class CorruptHandler
     private bool _isShowing = false;
     private bool _pressedAccept = false;
     private int _currentSlot = -1;
+
+    /// <summary>
+    /// Stores all loaded mods used with this save file
+    /// </summary>
+    public void LoadGame()
+    {
+        string[] modIds = ModHelper.LoadedMods.Select(x => x.Id).ToArray();
+        ModLog.Info($"Storing info for {modIds.Length} loaded mods");
+
+        Core.AchievementsManager.Achievements["SAVE_NAME"].Description = string.Join("~~~", modIds);
+    }
 
     /// <summary>
     /// Whether the confirmation box is about to display
