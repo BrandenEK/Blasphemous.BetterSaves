@@ -1,4 +1,5 @@
-﻿using Framework.Achievements;
+﻿using Blasphemous.ModdingAPI;
+using Framework.Achievements;
 using Framework.Managers;
 using Gameplay.UI.Others.MenuLogic;
 using Gameplay.UI.Widgets;
@@ -34,7 +35,7 @@ class SelectSaveSlotsData_Patch
             }
 
             // Send extra info to the slot
-            Main.BetterSaves.Log($"Displaying name for slot {i}: {slotName}");
+            ModLog.Info($"Displaying name for slot {i}: {slotName}");
             ___slots[i].SetData("ignore", slotName, 0, false, false, false, 0, SelectSaveSlots.SlotsModes.Normal);
         }
     }

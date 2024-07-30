@@ -1,4 +1,5 @@
-﻿using Blasphemous.ModdingAPI.Input;
+﻿using Blasphemous.ModdingAPI;
+using Blasphemous.ModdingAPI.Input;
 using Framework.Managers;
 using Gameplay.UI.Others.Buttons;
 using Gameplay.UI.Others.MenuLogic;
@@ -35,7 +36,7 @@ public class SlotHandler(int maxScreens)
 
         if (_currentScreen > 0 && Main.BetterSaves.InputHandler.GetButtonDown(ButtonCode.InventoryLeft))
         {
-            Main.BetterSaves.Log($"Moving left to screen {--_currentScreen}");
+            ModLog.Debug($"Moving left to screen {--_currentScreen}");
 
             RefreshSlots();
             EventSystem.current.SetSelectedGameObject(_slotList[SlotsWidget.SelectedSlot - 3].gameObject, null);
@@ -43,7 +44,7 @@ public class SlotHandler(int maxScreens)
 
         if (_currentScreen < _maxScreens && Main.BetterSaves.InputHandler.GetButtonDown(ButtonCode.InventoryRight))
         {
-            Main.BetterSaves.Log($"Moving right to screen {++_currentScreen}");
+            ModLog.Debug($"Moving right to screen {++_currentScreen}");
 
             RefreshSlots();
             EventSystem.current.SetSelectedGameObject(_slotList[SlotsWidget.SelectedSlot + 3].gameObject, null);
@@ -104,7 +105,7 @@ public class SlotHandler(int maxScreens)
             button.navigation = nav;
         }
 
-        Main.BetterSaves.LogWarning($"Added {_maxScreens * 3} more save slots");
+        ModLog.Warn($"Added {_maxScreens * 3} more save slots");
     }
 
     /// <summary>
