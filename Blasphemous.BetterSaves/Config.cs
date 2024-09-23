@@ -6,5 +6,8 @@ namespace Blasphemous.BetterSaves;
 /// </summary>
 public class Config()
 {
+    /// <summary>
+    /// The number of slots to display
+    /// </summary>
     public int totalSlots = 12;
 }
