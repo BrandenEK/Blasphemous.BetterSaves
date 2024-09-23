@@ -10,10 +10,13 @@ namespace Blasphemous.BetterSaves.Naming;
 /// </summary>
 public class NameCommand : ModCommand
 {
+    /// <inheritdoc/>
     protected override string CommandName { get; } = "slots";
 
+    /// <inheritdoc/>
     protected override bool AllowUppercase { get; } = false;
 
+    /// <inheritdoc/>
     protected override Dictionary<string, Action<string[]>> AddSubCommands()
     {
         return new Dictionary<string, Action<string[]>>()

@@ -8,22 +8,22 @@
     <Product>Better Saves</Product>
     <Authors>Damocles</Authors>
     <Company>Damocles</Company>
-    <Description>Allows naming save files and creating a lot more of them</Description>
+    <Description>Allows creating more save files, naming them, and checking their validity</Description>
     <Version>1.2.0</Version>
 
     <TargetName>BetterSaves</TargetName>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <DocumentationFile>bin\Release\$(TargetName).xml</DocumentationFile>
+    <DocumentationFile>bin\$(Configuration)\$(TargetName).xml</DocumentationFile>
     <RepositoryUrl>https://github.com/BrandenEK/Blasphemous.BetterSaves</RepositoryUrl>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Blasphemous.CheatConsole" Version="1.0.0" />
-    <PackageReference Include="Blasphemous.Framework.Menus" Version="0.3.0" />
-    <PackageReference Include="Blasphemous.ModdingAPI" Version="2.4.0" />
-    <PackageReference Include="Blasphemous.ModdingReferences" Version="4.0.67" />
+    <PackageReference Include="Blasphemous.CheatConsole" Version="1.0.1" />
+    <PackageReference Include="Blasphemous.Framework.Menus" Version="0.3.4" />
+    <PackageReference Include="Blasphemous.GameLibs" Version="4.0.67" />
+    <PackageReference Include="Blasphemous.ModdingAPI" Version="2.4.1" />
   </ItemGroup>
 
   <Target Name="Development" AfterTargets="PostBuildEvent">

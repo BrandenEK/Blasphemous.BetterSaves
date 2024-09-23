@@ -26,7 +26,7 @@ class Slot_Clear_Patch
     }
 }
 
-[HarmonyPatch(typeof(KeepFocus), "Awake")]
+[HarmonyPatch(typeof(KeepFocus), nameof(KeepFocus.Awake))]
 class Focus_Awake_Patch
 {
     public static void Prefix(KeepFocus __instance, List<GameObject> ___allowedObjects)
@@ -39,7 +39,7 @@ class Focus_Awake_Patch
 }
 
 // Always hide sacred sorrows button
-[HarmonyPatch(typeof(NewMainMenu), "IsAnySlotForBossRush")]
+[HarmonyPatch(typeof(NewMainMenu), nameof(NewMainMenu.IsAnySlotForBossRush))]
 class Menu_BossRush_Patch
 {
     public static void Postfix(ref bool __result) => __result = false;

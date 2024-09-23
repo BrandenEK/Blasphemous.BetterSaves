@@ -10,7 +10,7 @@ using UnityEngine.UI;
 namespace Blasphemous.BetterSaves.Naming;
 
 // Display name of save slot on select screen
-[HarmonyPatch(typeof(SelectSaveSlots), "SetAllData")]
+[HarmonyPatch(typeof(SelectSaveSlots), nameof(SelectSaveSlots.SetAllData))]
 class SelectSaveSlotsData_Patch
 {
     public static void Postfix(List<SaveSlot> ___slots)
@@ -39,7 +39,7 @@ class SelectSaveSlotsData_Patch
         }
     }
 }
-[HarmonyPatch(typeof(SaveSlot), "SetData")]
+[HarmonyPatch(typeof(SaveSlot), nameof(SaveSlot.SetData))]
 class SaveSlotData_Patch
 {
     public static bool Prefix(string zoneName, string info, ref Text ___ZoneText)
