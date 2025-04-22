@@ -16,5 +16,8 @@
 - Use the new-game menu or slots command to set the save file name
 
 ## Installation
-This mod is available for download through the [Blasphemous Mod Installer](https://github.com/BrandenEK/Blasphemous.Modding.Installer)
-- Required dependencies: Modding API, Cheat Console, Menu Framework
+This mod is available for download through the [Blasphemous Mod Installer](https://github.com/BrandenEK/Blasphemous.Modding.Installer) <br>
+Required dependencies:
+- [Modding API](https://github.com/BrandenEK/Blasphemous.ModdingAPI)
+- [Menu Framework](https://github.com/BrandenEK/Blasphemous.Framework.Menus)
+- [Cheat Console](https://github.com/BrandenEK/Blasphemous.CheatConsole)
