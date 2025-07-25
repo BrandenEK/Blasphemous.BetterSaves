@@ -1,7 +1,6 @@
-﻿using Gameplay.UI.Others.MenuLogic;
-using Gameplay.UI.Widgets;
+﻿using Blasphemous.Framework.Menus;
+using Gameplay.UI.Others.MenuLogic;
 using HarmonyLib;
-using System.Collections.Generic;
 
 namespace Blasphemous.BetterSaves.Corruption;
 
@@ -9,7 +8,7 @@ namespace Blasphemous.BetterSaves.Corruption;
 /// Prevent input on slots menu if the confirmation box is active
 /// </summary>
 [HarmonyPatch(typeof(SelectSaveSlots), nameof(SelectSaveSlots.Update))]
-class SaveSlots_Update_Patch
+class SelectSaveSlots_Update_Patch
 {
     public static bool Prefix() => !Main.BetterSaves.CorruptHandler.IsShowingConfirmation;
 }
@@ -17,9 +16,8 @@ class SaveSlots_Update_Patch
 /// <summary>
 /// Possibly open save confirmation box when loading a save file
 /// </summary>
-[HarmonyPatch(typeof(SelectSaveSlots), nameof(SelectSaveSlots.OnAcceptSlots))]
-class SaveSlots_Accept_Patch
+[HarmonyPatch(typeof(MenuFramework), "TryStartGame")]
+class MenuFramework_TryStartGame_Patch
 {
-    [HarmonyPriority(Priority.First)]
-    public static bool Prefix(ref int idxSlot, List<SaveSlot> ___slots) => ___slots[idxSlot].IsEmpty || !Main.BetterSaves.CorruptHandler.ShouldDisplayBox(idxSlot);
+    public static bool Prefix(int slot, bool isContinue) => !isContinue || !Main.BetterSaves.CorruptHandler.ShouldDisplayBox(slot);
 }
