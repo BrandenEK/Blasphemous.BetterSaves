@@ -9,7 +9,7 @@
     <Authors>Damocles</Authors>
     <Company>Damocles</Company>
     <Description>Allows creating more save files, naming them, and checking their validity</Description>
-    <Version>1.2.0</Version>
+    <Version>1.2.1</Version>
 
     <TargetName>BetterSaves</TargetName>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
