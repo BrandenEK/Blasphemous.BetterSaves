@@ -41,6 +41,14 @@ public class NameMenu : ModMenu
     }
 
     /// <summary>
+    /// When menu is opened, auto select the text box
+    /// </summary>
+    public override void OnShow()
+    {
+        base.OnShow();
+    }
+
+    /// <summary>
     /// When menu is closed, save the file name somewhere
     /// </summary>
     public override void OnFinish()
