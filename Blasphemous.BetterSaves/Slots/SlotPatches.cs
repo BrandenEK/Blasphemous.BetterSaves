@@ -7,8 +7,11 @@ using UnityEngine;
 
 namespace Blasphemous.BetterSaves.Slots;
 
+/// <summary>
+/// Refresh slots whenever menu is updated
+/// </summary>
 [HarmonyPatch(typeof(SelectSaveSlots), nameof(SelectSaveSlots.SetAllData))]
-class Slot_SetData_Patch
+class SelectSaveSlots_SetAllData_Patch
 {
     public static void Postfix()
     {
@@ -16,8 +19,11 @@ class Slot_SetData_Patch
     }
 }
 
+/// <summary>
+/// Not sure
+/// </summary>
 [HarmonyPatch(typeof(SelectSaveSlots), nameof(SelectSaveSlots.Clear))]
-class Slot_Clear_Patch
+class SelectSaveSlots_Clear_Patch
 {
     public static void Prefix(List<SaveSlot> ___slots)
     {
@@ -26,8 +32,11 @@ class Slot_Clear_Patch
     }
 }
 
+/// <summary>
+/// Store the list of allowed focus objects
+/// </summary>
 [HarmonyPatch(typeof(KeepFocus), nameof(KeepFocus.Awake))]
-class Focus_Awake_Patch
+class KeepFocus_Awake_Patch
 {
     public static void Prefix(KeepFocus __instance, List<GameObject> ___allowedObjects)
     {
@@ -38,9 +47,11 @@ class Focus_Awake_Patch
     }
 }
 
-// Always hide sacred sorrows button
+/// <summary>
+/// Always hide sacred sorrows button
+/// </summary>
 [HarmonyPatch(typeof(NewMainMenu), nameof(NewMainMenu.IsAnySlotForBossRush))]
-class Menu_BossRush_Patch
+class NewMainMenu_IsAnySlotForBossRush_Patch
 {
     public static void Postfix(ref bool __result) => __result = false;
 }
