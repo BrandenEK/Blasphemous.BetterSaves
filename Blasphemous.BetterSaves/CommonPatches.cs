@@ -4,7 +4,9 @@ using HarmonyLib;
 
 namespace Blasphemous.BetterSaves;
 
-// Add save name achievement whenever list is reset
+/// <summary>
+/// Add save name achievement whenever list is reset
+/// </summary>
 [HarmonyPatch(typeof(AchievementsManager), nameof(AchievementsManager.ResetPersistence))]
 class AchievementsManager_ResetPersistence_Patch
 {
